@@ -1,0 +1,51 @@
+<html>
+    <head>
+    </head>
+	<body style="margin: 0; padding: 0;">
+		<script src="{{ url_for('static', filename='javascript/vector2d.js') }}"></script>
+		<script src="{{ url_for('static', filename='javascript/boids.js') }}"></script>
+        <script>
+			var canvas = document.createElement('canvas')
+			  , ctx = canvas.getContext('2d');
+
+			var boids = new Boids(200);
+
+			document.body.appendChild(canvas);
+			
+			var id = setInterval(frame, 15);
+			var prevTime = performance.now();
+			function frame() {
+				boids.tick();
+				var currentTime = performance.now();
+				// console.log(currentTime - prevTime);
+				prevTime = currentTime;
+				draw_canvas();
+			}
+
+			function onresize() {
+				resize_canvas();
+				draw_canvas();
+			};
+			document.body.onresize = onresize;
+			onresize();
+
+            function resize_canvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+			};
+			
+			function draw_canvas() {
+                ctx.fillStyle = 'rgba(75, 225, 200, 0.25)';
+				ctx.fillRect(0, 0, canvas.width, canvas.height);
+				
+				ctx.fillStyle = 'rgb(0, 0, 0)';
+				let dims = new Vector2D(canvas.width, canvas.height);
+				for (let boid of boids.boids) {
+					let pos = boid.position.mult(dims)
+					ctx.fillRect(pos.x, pos.y, 2, 2)
+				}
+			}
+
+		</script>
+    </body>
+</html>

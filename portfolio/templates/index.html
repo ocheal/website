@@ -1,0 +1,51 @@
+<html>
+    <head>
+        <title>Oliver Cheal</title>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+        <link rel="stylesheet" media="screen" href="https://fontlibrary.org/face/bebas" type="text/css"/>
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+    </head>
+    <body>
+        <nav>
+            <ul class="nav">
+                <li class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <a class="fas fa-home fa-stack-1x fa-inverse" href="#home"></a>
+                </li>
+                <li class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <a class="fas fa-user fa-stack-1x fa-inverse" href="#projects"></a>
+                </li>
+                <li class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <a class="fas fa-address-book fa-stack-1x fa-inverse" href="#contactme"></a>
+                </li>
+                <hr class="center-gradient-rule">
+                <li class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <a class="fab fa-github fa-stack-1x fa-inverse" href="{{ url_for('github') }}"></a>
+                </li>
+            </ul>
+        </nav>
+        <div class="perspective">
+            <div class="section" id="home">
+                <div class="slow-scroll">
+                    <p class="title" id="title-home">Oliver Cheal</p>
+                </div>
+                <a href="#contactme" class="navarrow fas fa-arrow-circle-down fa-2x"></a>
+            </div>
+            <div class="section" id="projects">
+            {% for project in projects%}
+                <a class="project project-button" href="{{project.href}}">
+                    {{project.render_html()|safe}}
+                </a>
+            {%endfor%}
+            </div>
+            <div class="section" id="contactme">
+                <a href="#home" class="navarrow fas fa-arrow-circle-up fa-2x"></a>
+                <p class="title" id="title-contactme">OC</p>
+                <i class="fas fa-envelope">oli.cheal@gmail.com</i>
+            </div>
+        </div>
+    </body>
+</html>
