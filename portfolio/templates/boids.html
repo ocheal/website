@@ -1,24 +1,82 @@
 <html>
     <head>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/boids.css') }}">
     </head>
 	<body style="margin: 0; padding: 0;">
+		<div id="sliders">
+			<div class="slider-item">
+				<p>Number of Boids:</p>
+				<p class="slider-display" id="boid-number-value">200</p>
+				<div class="range-input">
+					<input type="range" class="slider" id="boid-number" 
+						   min="0" max="500" value="200" step="10"
+						   oninput="add_remove_boids(this.value)">
+					<div class="slider-ticks">
+						<option>0</option>
+						<option>250</option>
+						<option>500</option>
+					</div>
+				</div>
+			</div>
+			{% for behaviour in ["separation", "cohesion", "alignment"] %}
+			<div class="slider-item">
+				<p>{{ behaviour.title() }} Weight:</p>
+				<p class="slider-display" id="{{ behaviour }}-weight-value">1.</p>
+				<div class="range-input">
+					<input type="range" class="slider" id="{{ behaviour }}-weight" 
+						   min="-1" max="2" value="1" step="0.05" 
+						   oninput="slider_input('{{ behaviour }}', 'weight', this.value)">
+					<div class="slider-ticks">
+						<option>-1</option>
+						<option>0</option>
+						<option>1</option>
+						<option>2</option>
+					</div>
+				</div>
+			</div>
+			<div class="slider-item">
+				<p>{{ behaviour.title() }} Radius:</p>
+				<p class="slider-display" id="{{ behaviour }}-radius-value">0.5</p>
+				<div class="range-input">
+					<input type="range" class="slider" id="{{ behaviour }}-radius" 
+					       min="0" max="1" value="0.5" step="0.01"
+						   oninput="slider_input('{{ behaviour }}', 'radius', this.value)">
+					<div class="slider-ticks">
+						<option>0</option>
+						<option>0.5</option>
+						<option>1</option>
+					</div>
+				</div>
+			</div>
+			{% endfor %}
+			<div class="slider-item">
+				<p>Mouse Attraction:</p>
+				<p class="slider-display" id="mouse-weight-value">0.5</p>
+				<div class="range-input">
+					<input type="range" class="slider" id="mouse-weight" 
+						   min="-1" max="2" value="1" step="0.05"
+						   oninput="slider_input('mouse', 'weight', this.value)">
+					<div class="slider-ticks">
+						<option>-1</option>
+						<option>0</option>
+						<option>1</option>
+						<option>2</option>
+					</div>
+				</div>
+			</div>
+		</div>
 		<script src="{{ url_for('static', filename='javascript/vector2d.js') }}"></script>
 		<script src="{{ url_for('static', filename='javascript/boids.js') }}"></script>
         <script>
 			var canvas = document.createElement('canvas')
-			  , ctx = canvas.getContext('2d');
-
-			var boids = new Boids(200);
-
+			  , ctx = canvas.getContext('2d')
+			  , boids = new Boids(200);
+			
 			document.body.appendChild(canvas);
 			
 			var id = setInterval(frame, 15);
-			var prevTime = performance.now();
 			function frame() {
 				boids.tick();
-				var currentTime = performance.now();
-				// console.log(currentTime - prevTime);
-				prevTime = currentTime;
 				draw_canvas();
 			}
 
@@ -45,7 +103,52 @@
 					ctx.fillRect(pos.x, pos.y, 2, 2)
 				}
 			}
+			
+			function slider_display(id, value) {
+				document.getElementById(`${id}-value`).innerHTML = value;
+			}
 
+			function slider_input(behaviour, parameter, value) {
+				for (let boid of boids.boids) {
+					boid.forces[behaviour][parameter] = value;
+				}
+				slider_display(`${behaviour}-${parameter}`, value)
+			}
+			
+			function add_remove_boids(value) {
+				if (value < 10) value=1; //else potentially no reference boid. TODO: store slider values.
+				let reference_boid = boids.boids[0];
+				while (value > boids.boids.length) {
+					let boid = new Boid();
+					boid.forces = Object.assign(boid.forces, reference_boid.forces);
+					boids.boids.push(boid);
+				}
+				while (value < boids.boids.length) {
+					boids.boids.pop();
+				}
+				slider_display("boid-number", value)
+			}
+			
+			// Slider Initial Values
+			(() => {
+				let reference_boid = boids.boids[0];
+				for (let behaviour of ["separation", "cohesion", "alignment"]) {
+					let weight_slider = document.getElementById(`${behaviour}-weight`)
+					weight_slider.value = reference_boid.forces[behaviour].weight;
+					slider_display(`${behaviour}-weight`, weight_slider.value);
+
+					let radius_slider = document.getElementById(`${behaviour}-radius`)
+					radius_slider.value = reference_boid.forces[behaviour].radius;
+					slider_display(`${behaviour}-radius`, radius_slider.value);
+				}
+				let mouse_slider = document.getElementById('mouse-weight');
+				mouse_slider.value = reference_boid.forces["mouse"].weight;
+				slider_display("mouse-weight", mouse_slider.value);
+
+				let boid_slider = document.getElementById('boid-number')
+				boid_slider.value = boids.boids.length
+				slider_display("boid-number", boid_slider.value)
+			})()
 		</script>
     </body>
 </html>

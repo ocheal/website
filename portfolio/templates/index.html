@@ -35,11 +35,11 @@
                 <a href="#contactme" class="navarrow fas fa-arrow-circle-down fa-2x"></a>
             </div>
             <div class="section" id="projects">
-            {% for project in projects%}
+            {% for project in projects %}
                 <a class="project project-button" href="{{project.href}}">
                     {{project.render_html()|safe}}
                 </a>
-            {%endfor%}
+            {% endfor %}
             </div>
             <div class="section" id="contactme">
                 <a href="#home" class="navarrow fas fa-arrow-circle-up fa-2x"></a>

@@ -49,6 +49,14 @@ class Vector2D {
         return this.div(mag).mult(to);
     }
 
+    limit(to) {
+        let mag = this.magnitude();
+        if (mag > to) {
+            return this.div(mag).mult(to);
+        }
+        return this; //todo: this.copy?
+    }
+
     static random() {
         return new Vector2D(Math.random(), Math.random())
     }

@@ -51,12 +51,13 @@ class Boid {
         this.position = position;
         this.velocity = velocity;
         this.acceleration = Vector2D.zeros();
+        this.external = Vector2D.zeros();
 
-        this.forces = [new Separation(0.05, 1.),
-                       new Alignment(0.1, 1.),
-                       new Cohesion(0.1, 1.),
-                       new Breakaway(0.1),
-                       new MouseAttractor(0.05)]
+        this.forces = {"separation": new Separation(0.05),
+                       "alignment": new Alignment(0.1),
+                       "cohesion": new Cohesion(0.1),
+                       "breakaway": new Breakaway(0.1),
+                       "mouse": new MouseAttractor(0.)} //weight not radius
     }
 
     apply_boundary() {
@@ -74,19 +75,16 @@ class Boid {
     }
 
     calculate_forces(others, distances) {
-        let force_mag = 0.001;
         let obj = this;
-        let compute_force = function (force) {
-            return force.force(obj, others, distances)
-                        .normalize(force.weight*force_mag)
-        }
-        let force_values = this.forces.map(compute_force);
-        this.acceleration = sum(force_values);
+        let compute_force = (force) => force.force(obj, others, distances).mult(force._weight);
+        let force_values = Object.values(this.forces).map(compute_force);
+        this.acceleration = sum(force_values).add(this.external);
+        this.external = Vector2D.zeros();
     }
 
     apply_forces() {
         this.position = this.position.add(this.velocity);
-        this.velocity = this.velocity.add(this.acceleration).normalize(0.001);
+        this.velocity = this.velocity.add(this.acceleration).limit(0.001);
         this.acceleration = Vector2D.zeros();
         this.apply_boundary();
     }
@@ -96,6 +94,19 @@ class Force {
     constructor(radius=.2, weight=1.) {
         this.radius = radius
         this.weight = weight
+    }
+
+    get weight() {
+        return this._weight / this.factor;
+    }
+
+    set weight(value) {
+        this._weight = value * this.factor;
+    }
+    
+    get factor() {
+        // Factor applied to weight to keep force values reasonable
+        return 1.
     }
 
     neighbours(boid, others, distances) {
@@ -119,9 +130,14 @@ class Force {
 }
 
 class Separation extends Force {
+    get factor() {
+        return 0.0015;
+    }
+
     force(boid, others, distances) {
         // Move away from position of others
         // Weighted average based on distance
+        // Such that closer boids have larger force
         const [neighbours, neighbour_distances] = this.neighbours(boid, others, distances)
         
         var total_weight = 0;
@@ -130,7 +146,7 @@ class Separation extends Force {
             
             let dist = neighbour_distances[i];
             
-            let weight = 1 / (dist*dist)
+            let weight = 1 / (dist*dist);
             total_weight += weight;
             return delta.mult(weight);
         };
@@ -142,6 +158,10 @@ class Separation extends Force {
 }
 
 class Alignment extends Force {
+    get factor() {
+        return 0.05;
+    }
+    
     force(boid, others, distances) {
         const [neighbours, neighbour_distances] = this.neighbours(boid, others, distances)
         let flock_velocity = mean(neighbours
@@ -152,6 +172,10 @@ class Alignment extends Force {
 }
 
 class Cohesion extends Force {
+    get factor() {
+        return 0.0005;
+    }
+    
     force(boid, others, distances) {
         // Move towards average position of others
         const [neighbours, neighbour_distances] = this.neighbours(boid, others, distances)
@@ -163,25 +187,33 @@ class Cohesion extends Force {
 }
 
 class Breakaway extends Force {
+    get factor() {
+        return 0.0005;
+    }
+    
     force (boid, others, distances) {
         // Random chance that a boid decides to break away
         if (Math.random() < 0.0001) {
             const [neighbours, neighbour_distances] = this.neighbours(boid, others, distances)
-            let direction = Vector2D.random().subtract(0.5).normalize(0.001)
+            let force = Vector2D.random().subtract(0.5).normalize(1.).mult(this.weight);
             for (let neighbour of neighbours) {
-                neighbour.velocity = neighbour.velocity.add(direction);
+                neighbour.external = neighbour.external.add(force);
             }
-            boid.velocity = boid.velocity.add(direction);
+            boid.external = boid.external.add(force);
         }
         return Vector2D.zeros();
     }
 }
 
 class MouseAttractor extends Force {
-    constructor(weight) {
+    get factor() {
+        return 0.0005;
+    }
+    
+    constructor(weight=1.) {
         super(undefined, weight);
         this.position = Vector2D.zeros();
-        this.in_element = true;
+        this.in_element = false;
         canvas.addEventListener("mouseenter", () => {this.in_element=true;});
         canvas.addEventListener("mouseout", () => {this.in_element=false;});
         canvas.addEventListener("mousemove", (e) => {this.position.x = e.clientX/canvas.width;
