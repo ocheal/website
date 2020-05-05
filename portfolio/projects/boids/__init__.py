@@ -5,9 +5,9 @@ blueprint = Blueprint("boids", __name__,
                       template_folder="templates",
                       static_url_path="/projects/boids")
 
-@blueprint.route("/boids")
+@blueprint.route("/boids/")
 def route():
     return render_template(f"boids.html")
 
 from .. import Project
-boids = Project("boids", href="/boids", blueprint=blueprint)
+boids = Project("boids", href="/boids/", blueprint=blueprint)

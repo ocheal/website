@@ -7,11 +7,11 @@ app = Flask(__name__)
 def index():
     return render_template("index.html", projects=projects)
 
-@app.route("/github")
+@app.route("/github/")
 def github():
-    return redirect("https://github.com/ocheal")
+    return render_template("index.html", projects=projects) #return redirect("https://github.com/ocheal")
 
-@app.route("/contact")
+@app.route("/contact/")
 def contact():
     # return render_template("contact.html")
     return ""
@@ -21,4 +21,11 @@ for project in projects:
         app.register_blueprint(project.blueprint)
 
 if __name__ == "__main__":
-    app.run(port=5000, debug=True)
+    import sys
+    if len(sys.argv) > 1 and sys.argv[1] == "build":
+        from flask_frozen import Freezer
+        freezer = Freezer(app)
+        # freezer.freeze()
+        freezer.run(port=5000, debug=True)
+    else:
+        app.run(port=5000, debug=True)
