@@ -1,6 +1,6 @@
 <html>
     <head>
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/boids.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('.static', filename='css/boids.css') }}">
     </head>
 	<body style="margin: 0; padding: 0;">
 		<div id="sliders">
@@ -65,8 +65,8 @@
 				</div>
 			</div>
 		</div>
-		<script src="{{ url_for('static', filename='javascript/vector2d.js') }}"></script>
-		<script src="{{ url_for('static', filename='javascript/boids.js') }}"></script>
+		<script src="{{ url_for('.static', filename='javascript/vector2d.js') }}"></script>
+		<script src="{{ url_for('.static', filename='javascript/boids.js') }}"></script>
         <script>
 			var canvas = document.createElement('canvas')
 			  , ctx = canvas.getContext('2d')
@@ -130,25 +130,20 @@
 			}
 			
 			// Slider Initial Values
+			function slider_init(id, value)  {
+				let slider = document.getElementById(id);
+				slider.value = value;
+				slider_display(id, value);
+			}
 			(() => {
 				let reference_boid = boids.boids[0];
 				for (let behaviour of ["separation", "cohesion", "alignment"]) {
-					let weight_slider = document.getElementById(`${behaviour}-weight`)
-					weight_slider.value = reference_boid.forces[behaviour].weight;
-					slider_display(`${behaviour}-weight`, weight_slider.value);
-
-					let radius_slider = document.getElementById(`${behaviour}-radius`)
-					radius_slider.value = reference_boid.forces[behaviour].radius;
-					slider_display(`${behaviour}-radius`, radius_slider.value);
+					slider_init(`${behaviour}-weight`, reference_boid.forces[behaviour].weight);
+					slider_init(`${behaviour}-radius`, reference_boid.forces[behaviour].radius);
 				}
-				let mouse_slider = document.getElementById('mouse-weight');
-				mouse_slider.value = reference_boid.forces["mouse"].weight;
-				slider_display("mouse-weight", mouse_slider.value);
-
-				let boid_slider = document.getElementById('boid-number')
-				boid_slider.value = boids.boids.length
-				slider_display("boid-number", boid_slider.value)
-			})()
+				slider_init('mouse-weight', reference_boid.forces["mouse"].weight);
+				slider_init('boid-number', boids.boids.length);
+			})();
 		</script>
     </body>
 </html>
