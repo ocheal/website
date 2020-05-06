@@ -29,6 +29,8 @@ if __name__ == "__main__":
     if args.build or args.frozen:
         from flask_frozen import Freezer
         freezer = Freezer(app)
+        app.config["FREEZER_DESTINATION"] = "../../ocheal.github.io"
+        app.config["FREEZER_DESTINATION_IGNORE"] = [".git*"]
         if args.build:
             freezer.freeze()
         else:
