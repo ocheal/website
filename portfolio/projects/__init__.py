@@ -5,7 +5,8 @@ class Project:
         self.blueprint = blueprint
     
     def render_html(self):
-        return f"<p>{self.name}</p>"
+        center = "position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%)"
+        return f"<p style='{center}'>{self.name}</p>"
 
 projects = []
 from .boids import boids

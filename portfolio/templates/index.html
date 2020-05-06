@@ -1,8 +1,10 @@
+<!DOCTYPE html>
 <html>
     <head>
         <title>Oliver Cheal</title>
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
         <link rel="stylesheet" media="screen" href="https://fontlibrary.org/face/bebas" type="text/css"/>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
     </head>
     <body>
@@ -20,11 +22,11 @@
                     <i class="fa fa-circle fa-stack-2x"></i>
                     <a class="fas fa-address-book fa-stack-1x fa-inverse" href="#contactme"></a>
                 </li>
-                <hr class="center-gradient-rule">
+                <!-- <hr class="center-gradient-rule">
                 <li class="fa-stack fa-lg">
                     <i class="fa fa-circle fa-stack-2x"></i>
                     <a class="fab fa-github fa-stack-1x fa-inverse" href="https://github.com/ocheal"></a>
-                </li>
+                </li> -->
             </ul>
         </nav>
         <div class="perspective">
@@ -37,14 +39,22 @@
             <div class="section" id="projects">
             {% for project in projects %}
                 <a class="project project-button" href="{{project.href}}">
+                    <div>
                     {{project.render_html()|safe}}
+                    </div>
                 </a>
             {% endfor %}
             </div>
             <div class="section" id="contactme">
                 <a href="#home" class="nav-arrow fas fa-arrow-circle-up fa-2x"></a>
                 <p class="title" id="title-contactme">OC</p>
-                <i class="fas fa-envelope">oli.cheal@gmail.com</i>
+                <!-- <i class="fas fa-envelope">oli.cheal@gmail.com</i> -->
+                <div class="contactme-buttons">
+                    <a class="contactme-button" href="mailto:oli.cheal@gmail.com">EMAIL</a>
+                    <a class="contactme-button" href="https://github.com/ocheal">GITHUB</a>
+                    <a class="contactme-button" href="https://twitter.com/OliChealF1">TWITTER</a>
+                    <a class="contactme-button" href="https://www.linkedin.com/in/oliver-cheal-094876150/">LINKEDIN</a>
+                </div>
             </div>
         </div>
     </body>

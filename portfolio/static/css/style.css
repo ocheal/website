@@ -6,7 +6,7 @@
 }
 
 :root {
-    --title-font: 'BebasNeueLight'
+    --title-font: 'BebasNeueLight', 'Roboto', sans-serif
 }
 
 /* -- util -- */
@@ -122,6 +122,7 @@ body {
     margin: var(--y-margin) var(--x-margin);
     width: calc(100%/4 - 2*var(--x-margin));
     height: calc(50vh - 2*var(--y-margin));
+    font-family: 'Roboto', sans-serif;
 }
 @media (max-width: 900px) {
     .project {
@@ -158,17 +159,42 @@ body {
     transform: translateY(-7px);
 }
 
-.project p {
+.project > div {
     border-radius: inherit;
-    text-align: center;
+    position: relative;
     height: 100%;
+    width: 100%;
 }
 
 #contactme {
-    height: 30vh;
-    background-color: #97c2c1;
+    height: 20vh;
 }
 
 #title-contactme{
-    left: 10%;
+    left: 15%;
+    top: 50%
+}
+
+.contactme-buttons {
+    position: absolute;
+    display: flex;
+    justify-content: space-around;
+    left: 40%;
+    top: 50%;
+    width: 50%;
+    transform: translate(0%, -50%);
+}
+
+.contactme-button {
+    display: inline;
+    box-sizing: border-box;
+    text-decoration: none;
+    color: black;
+    font-family: 'Roboto', sans-serif;
+    font-size: 30px;
+    border: 2px solid transparent;
+}
+
+.contactme-button:hover {
+    border-bottom: 2px solid black;
 }
