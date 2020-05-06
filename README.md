@@ -2,7 +2,7 @@ Source code to generate static files for ocheal.github.io
 
 Internally uses flask to host a dynamic webserver, and Frozen-Flask to build static files which can be hosted on github pages
 
-```python
+```sh
 # nav to /website/
 cd website/
 
