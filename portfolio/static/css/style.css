@@ -30,7 +30,7 @@ body {
     transform: translate(-50%, -50%);
     font-size: 100px;
     font-family: var(--title-font);
-    animation: fadeIn ease 2s;
+    animation: fade-in ease 2s;
 }
 
 .perspective {
@@ -66,7 +66,7 @@ body {
     text-decoration: none;
 }
 
-.navarrow {
+.nav-arrow {
     position: absolute;
     text-decoration: none;
     color: black;
@@ -77,7 +77,7 @@ body {
     transition: transform 0.5s;
 }
 
-.navarrow:hover {
+.nav-arrow:hover {
     transform: translateY(-100%) scale(1.25);
 }
 

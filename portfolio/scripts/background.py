@@ -25,6 +25,7 @@ def create_background():
     # - Add with colors - #
     colors = np.sqrt(np.sum(np.square(triangles.mean(axis=1)), axis=1))
     p.set_clim(-0.3, 1.3)
+
     p.set_array(colors)
     ax.add_collection(p)
 
