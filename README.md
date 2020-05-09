@@ -7,11 +7,11 @@ Internally uses flask to host a dynamic webserver, and Frozen-Flask to build sta
 cd website/
 
 # Run the flask web server at localhost:5000
-python __init__.py
+python -m website
 
 # Host a web server from frozen files
-python __init__.py --frozen
+python -m website --frozen
 
 # Build the static files without hosting
-python __init__.py --build 
+python -m website --build 
 ```
