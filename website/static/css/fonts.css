@@ -1,0 +1,6 @@
+@font-face { /* from https://fontlibrary.org/face/bebas */
+    font-family: 'BebasNeueLight';
+    src: url('../assets/fonts/BebasNeueLight.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
