@@ -12,5 +12,5 @@ projects = []
 from .boids import boids
 projects.append(boids)
 
-for i in range(2,8+1):
+for i in range(2,4+1):
     projects.append(Project(f"Project #{i}"))

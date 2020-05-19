@@ -95,6 +95,7 @@ body {
     background-repeat: no-repeat;
     background-size: cover;
     background-attachment: fixed;
+    text-align: center;
 }
 
 .section {
@@ -110,7 +111,6 @@ body {
     background-color: white;
     padding: 0% 5%;
     height: auto;
-    min-height: 100vh;
     overflow: hidden; /* establishes new block formatting context, that makes height: auto; work (via float containement, else it sees no children) */
 }
 
@@ -172,7 +172,22 @@ body {
 
 #title-contactme{
     left: 15%;
-    top: 50%
+    top: 50%;
+    text-decoration: none;
+    color: black;
+}
+
+
+.h-underline {
+    border: 2px solid transparent;
+}
+
+.h-underline:hover {
+    border-bottom: 2px solid black;
+}
+
+.h-pointer:hover {
+    cursor: pointer;
 }
 
 .contactme-buttons {
@@ -192,9 +207,4 @@ body {
     color: black;
     font-family: 'Roboto', sans-serif;
     font-size: 30px;
-    border: 2px solid transparent;
-}
-
-.contactme-button:hover {
-    border-bottom: 2px solid black;
 }

@@ -1,14 +1,22 @@
+<!DOCTYPE html>
 <html>
     <head>
+        <link rel="stylesheet" media="screen" href="https://fontlibrary.org/face/bebas" type="text/css"/> 
+		<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
         <link rel="stylesheet" type="text/css" href="{{ url_for('.static', filename='css/boids.css') }}">
     </head>
-	<body style="margin: 0; padding: 0;">
-		<div id="sliders">
-			<div class="slider-item">
-				<p>Number of Boids:</p>
-				<p class="slider-display" id="boid-number-value">200</p>
-				<div class="range-input">
-					<input type="range" class="slider" id="boid-number" 
+	<body>
+		<div class="button" id="info-button"></div>
+		<div id="info">
+			{{ info|safe }}
+		</div>
+		<div class="button" id="controls-button"></div>
+		<table id="sliders">
+			<tr>
+				<td>Number of Boids:</td>
+				<td class="slider-display" id="boid-number-value">200</td>
+				<td class="slider">
+					<input type="range" class="range-input" id="boid-number" 
 						   min="0" max="500" value="200" step="10"
 						   oninput="add_remove_boids(this.value)">
 					<div class="slider-ticks">
@@ -16,14 +24,14 @@
 						<option>250</option>
 						<option>500</option>
 					</div>
-				</div>
-			</div>
+				</td>
+			</tr>
 			{% for behaviour in ["separation", "cohesion", "alignment"] %}
-			<div class="slider-item">
-				<p>{{ behaviour.title() }} Weight:</p>
-				<p class="slider-display" id="{{ behaviour }}-weight-value">1.</p>
-				<div class="range-input">
-					<input type="range" class="slider" id="{{ behaviour }}-weight" 
+			<tr>
+				<td>{{ behaviour.title() }} Weight:</td>
+				<td class="slider-display" id="{{ behaviour }}-weight-value">1.</td>
+				<td class="slider">
+					<input type="range" class="range-input" id="{{ behaviour }}-weight" 
 						   min="-1" max="2" value="1" step="0.05" 
 						   oninput="slider_input('{{ behaviour }}', 'weight', this.value)">
 					<div class="slider-ticks">
@@ -32,13 +40,13 @@
 						<option>1</option>
 						<option>2</option>
 					</div>
-				</div>
-			</div>
-			<div class="slider-item">
-				<p>{{ behaviour.title() }} Radius:</p>
-				<p class="slider-display" id="{{ behaviour }}-radius-value">0.5</p>
-				<div class="range-input">
-					<input type="range" class="slider" id="{{ behaviour }}-radius" 
+				</td>
+			</tr>
+			<tr>
+				<td>{{ behaviour.title() }} Radius:</td>
+				<td class="slider-display" id="{{ behaviour }}-radius-value">0.5</td>
+				<td class="slider">
+					<input type="range" class="range-input" id="{{ behaviour }}-radius" 
 					       min="0" max="1" value="0.5" step="0.01"
 						   oninput="slider_input('{{ behaviour }}', 'radius', this.value)">
 					<div class="slider-ticks">
@@ -46,14 +54,14 @@
 						<option>0.5</option>
 						<option>1</option>
 					</div>
-				</div>
-			</div>
+				</td>
+			</tr>
 			{% endfor %}
-			<div class="slider-item">
-				<p>Mouse Attraction:</p>
-				<p class="slider-display" id="mouse-weight-value">0.5</p>
-				<div class="range-input">
-					<input type="range" class="slider" id="mouse-weight" 
+			<tr>
+				<td>Mouse Attraction:</td>
+				<td class="slider-display" id="mouse-weight-value">0.5</td>
+				<td class="slider">
+					<input type="range" class="range-input" id="mouse-weight" 
 						   min="-1" max="2" value="1" step="0.05"
 						   oninput="slider_input('mouse', 'weight', this.value)">
 					<div class="slider-ticks">
@@ -62,9 +70,10 @@
 						<option>1</option>
 						<option>2</option>
 					</div>
-				</div>
-			</div>
-		</div>
+				</td>
+			</tr>
+		</table>
+		<a class="h-pointer" href="{{url_for('index')}}" id="initials">OC</a>
 		<script src="{{ url_for('.static', filename='javascript/vector2d.js') }}"></script>
 		<script src="{{ url_for('.static', filename='javascript/boids.js') }}"></script>
         <script>
@@ -104,7 +113,10 @@
 				}
 			}
 			
-			function slider_display(id, value) {
+			function slider_display(id, value, percent=true) {
+				if (percent) {
+					value = Math.round(100*value)+"%";
+				}
 				document.getElementById(`${id}-value`).innerHTML = value;
 			}
 
@@ -126,14 +138,14 @@
 				while (value < boids.boids.length) {
 					boids.boids.pop();
 				}
-				slider_display("boid-number", value)
+				slider_display("boid-number", value, false)
 			}
 			
 			// Slider Initial Values
-			function slider_init(id, value)  {
+			function slider_init(id, value, percent=true)  {
 				let slider = document.getElementById(id);
 				slider.value = value;
-				slider_display(id, value);
+				slider_display(id, value, percent);
 			}
 			(() => {
 				let reference_boid = boids.boids[0];
@@ -142,8 +154,35 @@
 					slider_init(`${behaviour}-radius`, reference_boid.forces[behaviour].radius);
 				}
 				slider_init('mouse-weight', reference_boid.forces["mouse"].weight);
-				slider_init('boid-number', boids.boids.length);
+				slider_init('boid-number', boids.boids.length, false);
 			})();
+		</script>
+		<script>
+			
+			let class_add_remove = function(element_id, klass, add=true) {
+				let element = document.getElementById(element_id);
+				let is_active = !add;
+				if (add) {
+					return () => {
+						let classlist = element.classList
+						if (is_active) {
+							classlist.remove(klass)
+						}
+						else {
+							classlist.add(klass)
+						}
+						is_active = !is_active;
+					}
+				}
+			}
+			
+			var info_button = document.getElementById("info-button");
+			var controls_button = document.getElementById("controls-button");
+
+			info_button.addEventListener("click", class_add_remove("info", "hidden"));
+			info_button.addEventListener("click", class_add_remove("info-button", "hidden"));
+			controls_button.addEventListener("click", class_add_remove("sliders", "hidden"));
+			controls_button.addEventListener("click", class_add_remove("controls-button", "hidden"));
 		</script>
     </body>
 </html>

@@ -22,11 +22,6 @@
                     <i class="fa fa-circle fa-stack-2x"></i>
                     <a class="fas fa-address-book fa-stack-1x fa-inverse" href="#contactme"></a>
                 </li>
-                <!-- <hr class="center-gradient-rule">
-                <li class="fa-stack fa-lg">
-                    <i class="fa fa-circle fa-stack-2x"></i>
-                    <a class="fab fa-github fa-stack-1x fa-inverse" href="https://github.com/ocheal"></a>
-                </li> -->
             </ul>
         </nav>
         <div class="perspective">
@@ -34,7 +29,6 @@
                 <div class="slow-scroll">
                     <p class="title" id="title-home">Oliver Cheal</p>
                 </div>
-                <a href="#contactme" class="nav-arrow fas fa-arrow-circle-down fa-2x"></a>
             </div>
             <div class="section" id="projects">
             {% for project in projects %}
@@ -46,14 +40,12 @@
             {% endfor %}
             </div>
             <div class="section" id="contactme">
-                <a href="#home" class="nav-arrow fas fa-arrow-circle-up fa-2x"></a>
-                <p class="title" id="title-contactme">OC</p>
-                <!-- <i class="fas fa-envelope">oli.cheal@gmail.com</i> -->
+                <a class="title h-pointer" href="{{url_for('index')}}" id="title-contactme">OC</a>
                 <div class="contactme-buttons">
-                    <a class="contactme-button" href="mailto:oli.cheal@gmail.com">EMAIL</a>
-                    <a class="contactme-button" href="https://github.com/ocheal">GITHUB</a>
-                    <a class="contactme-button" href="https://twitter.com/OliChealF1">TWITTER</a>
-                    <a class="contactme-button" href="https://www.linkedin.com/in/oliver-cheal-094876150/">LINKEDIN</a>
+                    <a class="contactme-button h-underline" href="mailto:oli.cheal@gmail.com">EMAIL</a>
+                    <a class="contactme-button h-underline" href="https://github.com/ocheal">GITHUB</a>
+                    <a class="contactme-button h-underline" href="https://twitter.com/OliChealF1">TWITTER</a>
+                    <a class="contactme-button h-underline" href="https://www.linkedin.com/in/oliver-cheal-094876150/">LINKEDIN</a>
                 </div>
             </div>
         </div>

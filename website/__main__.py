@@ -12,6 +12,7 @@ def parse_args():
         raise ValueError("Mututally exclusive options build and frozen can't both be set")
     return parser.parse_args()
 
+# If running as local (not installed) module or as script
 if (__package__ == "") or (__package__ is None):
     # Add directory above directory of __file__
     # to sys.path, so that website can be imported.

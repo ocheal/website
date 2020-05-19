@@ -56,7 +56,6 @@ class Boid {
         this.forces = {"separation": new Separation(0.05),
                        "alignment": new Alignment(0.1),
                        "cohesion": new Cohesion(0.1),
-                       "breakaway": new Breakaway(0.1),
                        "mouse": new MouseAttractor(0.)} //weight not radius
     }
 
@@ -220,10 +219,6 @@ class MouseAttractor extends Force {
                                                      this.position.y = e.clientY/canvas.height;});
     }
     force (boid, others, distances) {
-        if (Math.random() < 0.0001) {
-            // console.log([this.position.x, this.position.y])
-            console.log(this.in_element)
-        }
         if (this.in_element) {
             return this.position.subtract(boid.position);
         }
