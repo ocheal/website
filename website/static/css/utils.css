@@ -1,0 +1,11 @@
+.h-underline {
+    border: 2px solid transparent;
+}
+
+.h-underline:hover {
+    border-bottom: 2px solid black;
+}
+
+.h-pointer:hover {
+    cursor: pointer;
+}

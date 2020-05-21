@@ -1,5 +1,6 @@
 @import "keyframes.css";
 @import "fonts.css";
+@import "utils.css";
 
 * {
     margin: 0;
@@ -15,38 +16,38 @@ body {
     scroll-behavior: smooth;
 }
 
-.center-gradient-rule {
-    height: 1px;
-    border: 0;
-    width: 70%;
-    transform: translateX(20%);
-    justify-content: center;
-    background: radial-gradient(circle at center, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%);
-}
-
 .title {
     position: absolute;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    font-size: 100px;
+    font-size: 80px;
     font-family: var(--title-font);
     animation: fade-in ease 2s;
 }
-
-.perspective {
-    width: 100vw;
-    height: 100vh;
-    overflow-y: auto;
-    overflow-x: hidden;
-    perspective: 300px;
-    transform-style: preserve-3d;
-    scroll-behavior: inherit;
+@media only screen and (min-width: 600px) {
+    /* For tablets: */
+    .title {font-size: 100px}
 }
 
 .slow-scroll {
     height: inherit;
-    transform: translateZ(-300px) scale(2);
+}
+
+@media only screen and (min-width: 768px) {
+    /* For desktop: */
+    .perspective {
+        width: 100vw;
+        height: 100vh;
+        overflow-y: auto;
+        overflow-x: hidden;
+        scroll-behavior: inherit;
+        perspective: 300px;
+        transform-style: preserve-3d;
+    }
+    .slow-scroll {
+        transform: translateZ(-300px) scale(2);
+    }
 }
 
 /* -- nav -- */
@@ -92,11 +93,16 @@ body {
 /* -- content -- */
 
 #home {
-    background-image: url('../images/background.png');
+    background-image: url('../images/background-small.svg');
     background-repeat: no-repeat;
-    background-size: cover;
+    background-size: 100% 100%;
     background-attachment: fixed;
     text-align: center;
+}
+
+@media only screen and (min-width: 600px) {
+    /* For tablets: */
+    #home { background-image: url('../images/background-large.svg'); }
 }
 
 .section {
@@ -119,27 +125,27 @@ body {
     --x-margin: 0.5%;
     --y-margin: 2vh;
     float: left;
+    font-size: 12px;
     box-sizing: border-box; /* include padding and border in size, doesn't include margin */
     margin: var(--y-margin) var(--x-margin);
-    width: calc(100%/4 - 2*var(--x-margin));
+    width: calc(100%/2 - 2*var(--x-margin));
     height: calc(50vh - 2*var(--y-margin));
     font-family: 'Roboto', sans-serif;
 }
-@media (max-width: 900px) {
-    .project {
-        width: calc(100%/3 - 2*var(--x-margin));
+
+@media only screen and (min-width: 600px) {
+    /* For tablets: */
+    .project { font-size: 16px; }
+}
+
+@media only screen and (min-width: 768px) {
+    /* For desktop: */
+    .project { 
+        width: calc(100%/4 - 2*var(--x-margin));
+        font-size: 20px;
     }
 }
-@media (max-width: 550px) {
-    .project {
-        width: calc(100%/2 - 2*var(--x-margin));
-    }
-}
-@media (max-width: 400px) {
-    .project {
-        width: calc(100% - 2*var(--x-margin));
-    }
-}
+
 
 .project-button { /* see https://codepen.io/seme332/pen/reJOwo */
     color: #000;
@@ -168,37 +174,22 @@ body {
 }
 
 #contactme {
-    height: 20vh;
+    height: auto;
 }
 
 #title-contactme{
     left: 15%;
-    top: 50%;
     text-decoration: none;
     color: black;
 }
 
-
-.h-underline {
-    border: 2px solid transparent;
-}
-
-.h-underline:hover {
-    border-bottom: 2px solid black;
-}
-
-.h-pointer:hover {
-    cursor: pointer;
-}
-
 .contactme-buttons {
-    position: absolute;
     display: flex;
-    justify-content: space-around;
-    left: 40%;
-    top: 50%;
-    width: 50%;
-    transform: translate(0%, -50%);
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: auto;
+    margin: 5px 0;
 }
 
 .contactme-button {
@@ -208,4 +199,25 @@ body {
     color: black;
     font-family: 'Roboto', sans-serif;
     font-size: 30px;
+    margin: 2px 0;
+}
+
+@media only screen and (min-width: 768px) {
+    /* For desktop: */
+    #contactme {
+        height: 20vh;
+    }
+    .contactme-buttons {
+        position: absolute;
+        flex-direction: row;
+        justify-content: space-around;
+        right: 10%;
+        top: 50%;
+        width: 50%;
+        min-width: 500px;
+        transform: translate(0%, -50%);
+    }
+    .contactme-button {
+        margin: 0;
+    }
 }

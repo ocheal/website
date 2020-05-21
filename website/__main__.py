@@ -28,6 +28,6 @@ if args.build or args.frozen:
     if args.build:
         freezer.freeze()
     else:
-        freezer.run(port=5000, debug=True)
+        freezer.run(port=5000, debug=True, host="0.0.0.0")
 else:
-    app.run(port=5000, debug=True)
+    app.run(port=5000, debug=True, host="0.0.0.0")
