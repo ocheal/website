@@ -104,13 +104,11 @@
                     time_start = !time_start ? time_now : time_start;
                     
                     var scrolled = (get_scroll(element) - scroll_init);
-                    console.log(scroll_init);
                     var progress = (time_now - time_start)/time;
                     var target_scroll = (progress < 1) ? progress*amount : amount;
 
                     var d_scroll = Math.round(target_scroll - scrolled);
                     element.scrollBy(0, d_scroll);
-                    console.log(`scrolled ${d_scroll} total ${scrolled} needed ${amount}`)
 
                     if (progress < 1) window.requestAnimationFrame(step)
                 });
