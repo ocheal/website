@@ -159,20 +159,17 @@
 		</script>
 		<script>
 			
-			let class_add_remove = function(element_id, klass, add=true) {
+			function class_add_remove(element_id, klass, add=true) {
 				let element = document.getElementById(element_id);
 				let is_active = !add;
-				if (add) {
-					return () => {
-						let classlist = element.classList
-						if (is_active) {
-							classlist.remove(klass)
-						}
-						else {
-							classlist.add(klass)
-						}
-						is_active = !is_active;
+				return () => {
+					if (is_active) {
+						element.classList.remove(klass)
 					}
+					else {
+						element.classList.add(klass)
+					}
+					is_active = !is_active;
 				}
 			}
 			

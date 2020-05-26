@@ -12,8 +12,9 @@
 }
 
 /* -- util -- */
-body {
-    scroll-behavior: smooth;
+a {
+    text-decoration: none;
+    color: black;
 }
 
 .title {
@@ -25,9 +26,15 @@ body {
     font-family: var(--title-font);
     animation: fade-in ease 2s;
 }
+
 @media only screen and (min-width: 600px) {
     /* For tablets: */
     .title {font-size: 100px}
+}
+
+.no-scroll { 
+    overflow: hidden;
+    height: 100vh;
 }
 
 .slow-scroll {
@@ -50,75 +57,132 @@ body {
     }
 }
 
-/* -- nav -- */
-
-.nav {
-    position: fixed;
-    left: 1em;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 100;
-}
-.nav li {
-    list-style: none;
-    margin: .5em;
-    display: block;
-}
-.nav a, .nav i {
-    text-decoration: none;
-}
-
-.nav-arrow {
-    position: absolute;
-    text-decoration: none;
-    color: black;
-    left: 1em;
-    top: 100%;
-    padding: 1em 0em;
-    transform: translateY(-100%);
-    transition: transform 0.5s;
-}
-
-.nav-arrow:hover {
-    transform: translateY(-100%) scale(1.25);
-}
-
-.fa-stack:hover .fa-stack-2x{
-    color: white;
-}
-.fa-stack:hover .fa-stack-1x{
-    color: black;
-}
-
-/* -- content -- */
-
-#home {
-    background-image: url('../images/background-small.svg');
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
-    background-attachment: fixed;
-    text-align: center;
-}
-
-@media only screen and (min-width: 600px) {
-    /* For tablets: */
-    #home { background-image: url('../images/background-large.svg'); }
-}
+/* -- sections -- */
 
 .section {
     position: relative;
     height: 100vh;
 }
 
-#profile {
-    background-color: white;
+.flex-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    list-style: none;
+    width: 100%;
+    height: auto;
+    margin: 5px 0;
+    justify-content: space-around;
 }
 
-#projects {
-    background-color: white;
+@media only screen and (min-width: 768px) {
+    /* For desktop: */
+    .flex-list {
+        flex-direction: row;
+    }
+}
+
+.link-item {
+    display: inline;
+    box-sizing: border-box;
+    color: black;
+    font-family: 'Roboto', sans-serif;
+    font-size: 30px;
+    margin: 2px 0;
+}
+
+@media only screen and (min-width: 768px) {
+    /* For desktop: */
+    .link-item {
+        margin: 0;
+    }
+}
+
+/* -- home -- */
+#home.section {
+    background-image: url('../images/background-small.svg');
+    background-repeat: no-repeat;
+    background-size: 100vh 100vh;
+    background-attachment: fixed;
+    text-align: center;
+    overflow: hidden;
+    transition: all 0.3s ease 0s;
+}
+
+@media only screen and (min-width: 600px) {
+    /* For tablets: */
+    #home.section { 
+        background-image: url('../images/background-large.svg');
+        background-size: 100% 100%;
+    }
+}
+
+#navbar-toggle {
+    position: absolute;
+    right: 0;
+    top: 0;
+    margin: 20px;
+    width: auto;
+    cursor: pointer;
+    z-index: 999;
+}
+
+#title-home {
+    transition: ease .75s;
+}
+
+#section-links {
+    z-index: 999;
+    position: absolute; /* Cannot use position fixed inside transform, e.g. perspective. Cannot use position: sticky with overflow: hidden.*/
+    transition: ease .75s;
+    height: 100vh;
+    margin: 0;
+}
+
+@media only screen and (min-width: 768px) {
+    /* For desktop: */
+    #section-links {
+        height: auto;
+        right: 0;
+        bottom: 0;
+        width: 30%;
+        margin: 10px;
+    }
+    #navbar-toggle {
+        display: none;
+    }
+}
+
+@media only screen and (max-width: 1299px) and (min-width: 768px) {
+    #section-links {
+        bottom: 50%;
+        transform: translateY(50%);
+        align-items: flex-end;
+        flex-direction: column;
+    }
+}
+
+@media only screen and (max-width: 767px) {
+    /* For mobile: */
+    #section-links {
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    #section-links.hidden-mobile {
+        transform: translate(-50%, -100%);
+    }
+
+    #title-home.hidden-mobile {
+        top: 100%;
+        transform: translateX(-50%);
+    }
+}
+
+/* -- projects -- */
+#projects.section {
     padding: 0% 5%;
     height: auto;
-    overflow: hidden; /* establishes new block formatting context, that makes height: auto; work (via float containement, else it sees no children) */
 }
 
 .project {
@@ -160,7 +224,7 @@ body {
 }
   
 .project-button:hover {
-    background-color: rgba(50, 225, 175, 0.75); /* /#2EE59D */
+    background-color: rgba(50, 225, 175, 0.75);
     box-shadow: 0px 15px 20px rgba(46, 229, 157, 0.4);
     color: #fff;
     transform: translateY(-7px);
@@ -173,7 +237,8 @@ body {
     width: 100%;
 }
 
-#contactme {
+/* -- contact -- */
+#contactme.section {
     height: auto;
 }
 
@@ -183,41 +248,18 @@ body {
     color: black;
 }
 
-.contactme-buttons {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    height: auto;
-    margin: 5px 0;
-}
-
-.contactme-button {
-    display: inline;
-    box-sizing: border-box;
-    text-decoration: none;
-    color: black;
-    font-family: 'Roboto', sans-serif;
-    font-size: 30px;
-    margin: 2px 0;
-}
-
 @media only screen and (min-width: 768px) {
     /* For desktop: */
-    #contactme {
+    #contactme.section {
         height: 20vh;
     }
-    .contactme-buttons {
+
+    #contactme-links {
         position: absolute;
-        flex-direction: row;
-        justify-content: space-around;
         right: 10%;
         top: 50%;
         width: 50%;
         min-width: 500px;
-        transform: translate(0%, -50%);
-    }
-    .contactme-button {
-        margin: 0;
+        transform: translateY(-50%);
     }
 }

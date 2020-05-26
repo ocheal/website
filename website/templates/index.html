@@ -5,32 +5,33 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
     </head>
     <body>
-        <nav>
-            <ul class="nav">
-                <li class="fa-stack fa-lg">
-                    <i class="fa fa-circle fa-stack-2x"></i>
-                    <a class="fas fa-home fa-stack-1x fa-inverse" href="#home"></a>
-                </li>
-                <li class="fa-stack fa-lg">
-                    <i class="fa fa-circle fa-stack-2x"></i>
-                    <a class="fas fa-user fa-stack-1x fa-inverse" href="#projects"></a>
-                </li>
-                <li class="fa-stack fa-lg">
-                    <i class="fa fa-circle fa-stack-2x"></i>
-                    <a class="fas fa-address-book fa-stack-1x fa-inverse" href="#contactme"></a>
-                </li>
-            </ul>
-        </nav>
-        <div class="perspective">
+        <div class="perspective" id="main-container">
             <div class="section" id="home">
+                <nav>
+                    <ul class="hidden-mobile flex-list" id="section-links">
+                        <li><a class="link-item h-underline" href="#home">HOME</a></li>
+                        <li><a class="link-item h-underline" href="#projects">PROJECTS</a></li>
+                        <li><a class="link-item h-underline" href="#contactme">CONTACT</a></li>
+                    </ul>
+                    <div id="navbar-toggle">
+                        <svg class="" id="hamburger" viewBox="0 0 100 80" width="50" height="50">
+                            <rect y="14" width="100" height="8" rx="4"></rect>
+                            <rect y="36" width="100" height="8" rx="4"></rect>
+                            <rect y="58" width="100" height="8" rx="4"></rect>
+                        </svg>
+                        <svg class="hidden" id="cross" viewBox="0 0 80 80" width="50" height="50">
+                            <rect x="0" y="36" width="80" height="8" rx="4", transform="rotate(-45, 40, 40)"></rect>
+                            <rect x="0" y="36" width="80" height="8" rx="4", transform="rotate(45, 40, 40)"></rect>
+                        </svg>
+                    </div>
+                </nav>
                 <div class="slow-scroll">
                     <p class="title" id="title-home">Oliver Cheal</p>
                 </div>
             </div>
-            <div class="section" id="projects">
+            <div class="section group" id="projects">
             {% for project in projects %}
                 <a class="project project-button" href="{{project.href}}">
                     <div>
@@ -41,13 +42,94 @@
             </div>
             <div class="section" id="contactme">
                 <a class="title h-pointer" href="{{url_for('index')}}" id="title-contactme">OC</a>
-                <div class="contactme-buttons">
-                    <a class="contactme-button h-underline" href="mailto:oli.cheal@gmail.com">EMAIL</a>
-                    <a class="contactme-button h-underline" href="https://github.com/ocheal">GITHUB</a>
-                    <a class="contactme-button h-underline" href="https://twitter.com/OliChealF1">TWITTER</a>
-                    <a class="contactme-button h-underline" href="https://www.linkedin.com/in/oliver-cheal-094876150/">LINKEDIN</a>
-                </div>
+                <ul class="flex-list" id="contactme-links">
+                    <li><a class="link-item h-underline" href="mailto:oli.cheal@gmail.com">EMAIL</a></li>
+                    <li><a class="link-item h-underline" href="https://github.com/ocheal">GITHUB</a></li>
+                    <li><a class="link-item h-underline" href="https://twitter.com/OliChealF1">TWITTER</a></li>
+                    <li><a class="link-item h-underline" href="https://www.linkedin.com/in/oliver-cheal-094876150/">LINKEDIN</a></li>
+                </ul>
             </div>
         </div>
+        <script>
+			function class_add_remove(element, klass, add=true, id=true) {
+                /**
+                * Toggle the addition/removal of a class from an element
+                *
+                * @param {string/element} element_id - The element on which to add/remove the class.
+                * @param {string} klass - The class to be added/removed.
+                * @param {bool} add - Wether to add or remove the class first.
+                * @param {bool} id - Wether the element is given as string id or not
+                */
+                if (id) element = document.getElementById(element);
+				let is_active = !add;
+                return () => {
+                    if (is_active) {
+                        element.classList.remove(klass)
+                    }
+                    else {
+                        element.classList.add(klass)
+                    }
+                    is_active = !is_active;
+                }
+            }
+
+            var menu_shown = false;
+            var menu_toggle = document.getElementById("navbar-toggle");
+            menu_toggle.addEventListener("click", class_add_remove("hamburger", "hidden", true));
+            menu_toggle.addEventListener("click", class_add_remove("cross", "hidden", false));
+            menu_toggle.addEventListener("click", class_add_remove("section-links", "hidden-mobile", false));
+            menu_toggle.addEventListener("click", class_add_remove("title-home", "hidden-mobile", true));
+            menu_toggle.addEventListener("click", class_add_remove("main-container", "no-scroll", true, true));
+            menu_toggle.addEventListener("click", () => { menu_shown = !menu_shown });
+
+            var section_links = document.getElementById("section-links")
+            for (let section_link of section_links.getElementsByTagName("a")) {
+                section_link.addEventListener("click", () => {
+                    if (menu_shown) menu_toggle.click()
+                });
+            };
+        </script>
+        <script>
+            function get_scroll(e) {
+                /* Return the top scroll of element `e` */
+                if (e.scrollTop !== undefined) return e.scrollTop;
+                return e.scrollY;
+            }
+            function scroll_smoothly(amount, element, time=500) {
+                element = element || window;
+                amount = Math.ceil(amount);
+                var scroll_init = get_scroll(element);
+                var time_start = null;
+                window.requestAnimationFrame(function step(time_now){
+                    time_start = !time_start ? time_now : time_start;
+                    
+                    var scrolled = (get_scroll(element) - scroll_init);
+                    console.log(scroll_init);
+                    var progress = (time_now - time_start)/time;
+                    var target_scroll = (progress < 1) ? progress*amount : amount;
+
+                    var d_scroll = Math.round(target_scroll - scrolled);
+                    element.scrollBy(0, d_scroll);
+                    console.log(`scrolled ${d_scroll} total ${scrolled} needed ${amount}`)
+
+                    if (progress < 1) window.requestAnimationFrame(step)
+                });
+            }
+
+            (function addSmoothScroll() {
+                var links = document.getElementsByTagName('a');
+                for (let link of links) {
+                    if (link.hash == "") return;
+
+                    let link_element = document.getElementById(link.hash.substring(1));
+                    link.addEventListener("click", (event) => {
+                        event.preventDefault();
+                        let scroll_element = (window.innerHeight < 768) ? window : document.getElementById("main-container");
+                        let scroll_amount = link_element.getBoundingClientRect().top;
+                        scroll_smoothly(scroll_amount, scroll_element);
+                    });
+                }
+            })();
+        </script>
     </body>
 </html>
