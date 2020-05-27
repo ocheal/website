@@ -235,6 +235,7 @@ a {
     position: relative;
     height: 100%;
     width: 100%;
+    overflow: hidden;
 }
 
 /* -- contact -- */
@@ -246,6 +247,10 @@ a {
     left: 15%;
     text-decoration: none;
     color: black;
+}
+#contactme-links .link-item {
+    margin: 5px 0;
+    font-size: 25px;
 }
 
 @media only screen and (min-width: 768px) {
@@ -261,5 +266,6 @@ a {
         width: 50%;
         min-width: 500px;
         transform: translateY(-50%);
+        font-size: 30px;
     }
 }

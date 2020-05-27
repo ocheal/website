@@ -19,13 +19,27 @@ from textwrap import dedent
 class Boids(Project):
     def render_html(self):
         center = "position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%)"
-        container_style = f"{center}; width: 70%; text-align: center;"
-        title_style = "text-decoration: underline"
-        image_style = "width: 100px; height: 100px; border-radius: 20px; margin: 2em 0;"
         return render_template_string(dedent(f"""\
-            <div style='{container_style}'>
-                <p style='{title_style}'>Boids</p>
-                <img style='{image_style}', src='{{{{ url_for('static', filename='images/boids.png') }}}}'>
+            <style>
+            #boids-projects-container {{
+                {center};
+                width: 70%; text-align: center;
+            }}
+            #boids-title {{
+                text-decoration: underline;
+            }}
+            #boids-image {{
+                width: 75px; height: 75px; border-radius: 15px; margin: 1em 0;
+            }}
+            @media only screen and (min-width: 768px) {{
+                #boids-image {{
+                    width: 100px; height: 100px; border-radius: 20px; margin: 2em 0;
+                }}
+            }}
+            </style>
+            <div id='boids-projects-container'>
+                <p id='boids-title'>Boids</p>
+                <img id='boids-image', src='{{{{ url_for('static', filename='images/boids.png') }}}}'>
                 <p>A flock of boids following 3 simple rules exhibit emergent behaviour.</p>
             </div>
             """))
