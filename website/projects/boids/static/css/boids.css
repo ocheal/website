@@ -12,6 +12,22 @@ body {
     width: 100vw;
 }
 
+#menu-toggle {
+    position: absolute;
+    right: 0;
+    top: 0;
+    margin: 20px;
+    width: auto;
+    cursor: pointer;
+    z-index: 999;
+}
+@media only screen and (min-width: 768px) {
+    /* For Desktop */
+    #menu-toggle {
+        display: none;
+    }
+}
+
 #info {
     position: absolute;
     margin: 1em;

@@ -1,11 +1,25 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <link rel="stylesheet" media="screen" href="https://fontlibrary.org/face/bebas" type="text/css"/> 
-		<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/fonts.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ url_for('.static', filename='css/boids.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/utils.css') }}">
+        <script src="{{ url_for('static', filename='js/interactive.js') }}"></script>
     </head>
 	<body>
+		<div id="menu-toggle">
+			<svg class="" id="hamburger" viewBox="0 0 100 80" width="50" height="50">
+				<rect y="14" width="100" height="8" rx="4"></rect>
+				<rect y="36" width="100" height="8" rx="4"></rect>
+				<rect y="58" width="100" height="8" rx="4"></rect>
+			</svg>
+			<svg class="removed" id="cross" viewBox="0 0 80 80" width="50" height="50">
+				<rect x="0" y="36" width="80" height="8" rx="4", transform="rotate(-45, 40, 40)"></rect>
+				<rect x="0" y="36" width="80" height="8" rx="4", transform="rotate(45, 40, 40)"></rect>
+			</svg>
+		</div>
 		<div class="button" id="info-button"></div>
 		<div id="info">
 			{{ info|safe }}
@@ -77,6 +91,24 @@
 		<script src="{{ url_for('.static', filename='javascript/vector2d.js') }}"></script>
 		<script src="{{ url_for('.static', filename='javascript/boids.js') }}"></script>
         <script>
+			function setupCanvas(canvas) {
+				// Get the device pixel ratio, falling back to 1.
+				var dpr = window.devicePixelRatio || 1;
+				resize_canvas()
+				console.log(dpr);
+				// Get the size of the canvas in CSS pixels.
+				var rect = canvas.getBoundingClientRect();
+				// Give the canvas pixel dimensions of their CSS
+				// size * the device pixel ratio.
+				canvas.width = rect.width * dpr;
+				canvas.height = rect.height * dpr;
+				var ctx = canvas.getContext('2d');
+				console.log(canvas.width);
+				// Scale all drawing operations by the dpr, so you
+				// don't have to worry about the difference.
+				ctx.scale(dpr, dpr);
+				return ctx;
+			}
 			var canvas = document.createElement('canvas')
 			  , ctx = canvas.getContext('2d')
 			  , boids = new Boids(200);
@@ -89,6 +121,13 @@
 				draw_canvas();
 			}
 
+			var dpr = window.devicePixelRatio || 1;
+            function resize_canvas() {
+				canvas.style.width = window.innerWidth + "px";
+				canvas.style.height = window.innerHeight + "px";
+                canvas.width = window.innerWidth * dpr;
+                canvas.height = window.innerHeight * dpr;
+			};
 			function onresize() {
 				resize_canvas();
 				draw_canvas();
@@ -96,10 +135,6 @@
 			document.body.onresize = onresize;
 			onresize();
 
-            function resize_canvas() {
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-			};
 			
 			function draw_canvas() {
                 ctx.fillStyle = 'rgba(75, 225, 200, 0.25)';
@@ -158,28 +193,19 @@
 			})();
 		</script>
 		<script>
-			
-			function class_add_remove(element_id, klass, add=true) {
-				let element = document.getElementById(element_id);
-				let is_active = !add;
-				return () => {
-					if (is_active) {
-						element.classList.remove(klass)
-					}
-					else {
-						element.classList.add(klass)
-					}
-					is_active = !is_active;
-				}
-			}
-			
 			var info_button = document.getElementById("info-button");
 			var controls_button = document.getElementById("controls-button");
 
-			info_button.addEventListener("click", class_add_remove("info", "hidden"));
-			info_button.addEventListener("click", class_add_remove("info-button", "hidden"));
-			controls_button.addEventListener("click", class_add_remove("sliders", "hidden"));
-			controls_button.addEventListener("click", class_add_remove("controls-button", "hidden"));
+			info_button.addEventListener("click", class_toggle("info", "hidden", false));
+			info_button.addEventListener("click", class_toggle("info-button", "hidden", false));
+			controls_button.addEventListener("click", class_toggle("sliders", "hidden", false));
+			controls_button.addEventListener("click", class_toggle("controls-button", "hidden", false));
+
+            var menu_shown = false;
+            var menu_toggle = document.getElementById("menu-toggle");
+            menu_toggle.addEventListener("click", class_toggle("hamburger", "removed", false));
+            menu_toggle.addEventListener("click", class_toggle("cross", "removed", true));
+            menu_toggle.addEventListener("click", () => { menu_shown = !menu_shown });
 		</script>
     </body>
 </html>

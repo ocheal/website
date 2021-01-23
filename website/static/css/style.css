@@ -117,7 +117,7 @@ a {
     }
 }
 
-#navbar-toggle {
+#menu-toggle {
     position: absolute;
     right: 0;
     top: 0;
@@ -148,7 +148,7 @@ a {
         width: 30%;
         margin: 10px;
     }
-    #navbar-toggle {
+    #menu-toggle {
         display: none;
     }
 }

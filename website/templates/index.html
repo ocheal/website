@@ -5,6 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
+        <script src="{{ url_for('static', filename='js/interactive.js') }}"></script>
     </head>
     <body>
         <div class="perspective" id="main-container">
@@ -15,13 +16,13 @@
                         <li class="link-item"><a class="h-underline" href="#projects">PROJECTS</a></li>
                         <li class="link-item"><a class="h-underline" href="#contactme">CONTACT</a></li>
                     </ul>
-                    <div id="navbar-toggle">
+                    <div id="menu-toggle">
                         <svg class="" id="hamburger" viewBox="0 0 100 80" width="50" height="50">
                             <rect y="14" width="100" height="8" rx="4"></rect>
                             <rect y="36" width="100" height="8" rx="4"></rect>
                             <rect y="58" width="100" height="8" rx="4"></rect>
                         </svg>
-                        <svg class="hidden" id="cross" viewBox="0 0 80 80" width="50" height="50">
+                        <svg class="removed" id="cross" viewBox="0 0 80 80" width="50" height="50">
                             <rect x="0" y="36" width="80" height="8" rx="4", transform="rotate(-45, 40, 40)"></rect>
                             <rect x="0" y="36" width="80" height="8" rx="4", transform="rotate(45, 40, 40)"></rect>
                         </svg>
@@ -51,35 +52,13 @@
             </div>
         </div>
         <script>
-			function class_add_remove(element, klass, add=true, id=true) {
-                /**
-                * Toggle the addition/removal of a class from an element
-                *
-                * @param {string/element} element - The element on which to add/remove the class.
-                * @param {string} klass - The class to be added/removed.
-                * @param {bool} add - Wether to add or remove the class first.
-                * @param {bool} id - Wether the element is given as string id or not
-                */
-                if (id) element = document.getElementById(element);
-				let is_active = !add;
-                return () => {
-                    if (is_active) {
-                        element.classList.remove(klass)
-                    }
-                    else {
-                        element.classList.add(klass)
-                    }
-                    is_active = !is_active;
-                }
-            }
-
             var menu_shown = false;
-            var menu_toggle = document.getElementById("navbar-toggle");
-            menu_toggle.addEventListener("click", class_add_remove("hamburger", "hidden", true));
-            menu_toggle.addEventListener("click", class_add_remove("cross", "hidden", false));
-            menu_toggle.addEventListener("click", class_add_remove("section-links", "hidden-mobile", false));
-            menu_toggle.addEventListener("click", class_add_remove("title-home", "hidden-mobile", true));
-            menu_toggle.addEventListener("click", class_add_remove("main-container", "no-scroll", true));
+            var menu_toggle = document.getElementById("menu-toggle");
+            menu_toggle.addEventListener("click", class_toggle("hamburger", "removed", false));
+            menu_toggle.addEventListener("click", class_toggle("cross", "removed", true));
+            menu_toggle.addEventListener("click", class_toggle("section-links", "hidden-mobile", true));
+            menu_toggle.addEventListener("click", class_toggle("title-home", "hidden-mobile", false));
+            menu_toggle.addEventListener("click", class_toggle("main-container", "no-scroll", false));
             menu_toggle.addEventListener("click", () => { menu_shown = !menu_shown });
 
             var section_links = document.getElementById("section-links")
@@ -89,61 +68,6 @@
                 });
             };
         </script>
-        <script>
-            function getTopScroll(e) {
-                /* Return the top scroll of element `e` */
-                if (e.scrollTop !== undefined) return e.scrollTop;
-                return e.scrollY;
-            }
-            function scrollSmoothly(amount, element, time=500) {
-                element = element || window;
-                amount = Math.ceil(amount);
-                var scroll_init = getTopScroll(element);
-                var time_start = null;
-                window.requestAnimationFrame(function step(time_now){
-                    time_start = !time_start ? time_now : time_start;
-                    
-                    var scrolled = (getTopScroll(element) - scroll_init);
-                    var progress = (time_now - time_start)/time;
-                    var target_scroll = (progress < 1) ? progress*amount : amount;
-
-                    var d_scroll = Math.round(target_scroll - scrolled);
-                    element.scrollBy(0, d_scroll);
-
-                    if (progress < 1) window.requestAnimationFrame(step)
-                });
-            }
-
-            function getScrollParent(element, includeHidden=false, fallback=window) {
-                var style = getComputedStyle(element);
-                var excludeStaticParent = style.position === "absolute";
-                var overflowRegex = includeHidden ? /(auto|scroll|hidden)/ : /(auto|scroll)/;
-
-                if (style.position === "fixed") return fallback;
-                for (var parent = element; (parent = parent.parentElement);) {
-                    style = getComputedStyle(parent);
-                    if (excludeStaticParent && style.position === "static") {
-                        continue;
-                    }
-                    if (overflowRegex.test(style.overflow + style.overflowY + style.overflowX)) return parent;
-                }
-                return fallback;
-            }
-
-            (function smoothScrollAll() {
-                var links = document.getElementsByTagName('a');
-                for (let link of links) {
-                    if (link.hash == "") return;
-
-                    let target = document.getElementById(link.hash.substring(1));
-                    link.addEventListener("click", (event) => {
-                        event.preventDefault();
-                        let scrollable = getScrollParent(target);
-                        let amount = target.getBoundingClientRect().top;
-                        scrollSmoothly(amount, scrollable);
-                    });
-                }
-            })();
-        </script>
+        <script src="{{ url_for('static', filename='js/smooth_scroll.js') }}"></script>
     </body>
 </html>

@@ -215,8 +215,8 @@ class MouseAttractor extends Force {
         this.in_element = false;
         canvas.addEventListener("mouseenter", () => {this.in_element=true;});
         canvas.addEventListener("mouseout", () => {this.in_element=false;});
-        canvas.addEventListener("mousemove", (e) => {this.position.x = e.clientX/canvas.width;
-                                                     this.position.y = e.clientY/canvas.height;});
+        canvas.addEventListener("mousemove", (e) => {this.position.x = e.clientX/canvas.offsetWidth;
+                                                     this.position.y = e.clientY/canvas.offsetHeight;});
     }
     force (boid, others, distances) {
         if (this.in_element) {

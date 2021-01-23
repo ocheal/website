@@ -21,6 +21,6 @@ used with float elements */
     clear: both;
 }
 
-.hidden {
+.removed {
     display: none !important;
 }
