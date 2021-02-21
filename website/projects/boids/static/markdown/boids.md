@@ -13,4 +13,4 @@ A force moving an individual towards the average velocity of it's neighbours.
 
 The contribution of each of these behaviours can be adjused with the adjacent sliders.
 
-[view source on github](https://github.com/ocheal/website/tree/master/website/projects/boids)
+[view source on github](https://github.com/olicheal/website/tree/master/website/projects/boids)

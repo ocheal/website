@@ -9,111 +9,85 @@
         <script src="{{ url_for('static', filename='js/interactive.js') }}"></script>
     </head>
 	<body>
-		<div id="menu-toggle">
-			<svg class="" id="hamburger" viewBox="0 0 100 80" width="50" height="50">
-				<rect y="14" width="100" height="8" rx="4"></rect>
-				<rect y="36" width="100" height="8" rx="4"></rect>
-				<rect y="58" width="100" height="8" rx="4"></rect>
-			</svg>
-			<svg class="removed" id="cross" viewBox="0 0 80 80" width="50" height="50">
-				<rect x="0" y="36" width="80" height="8" rx="4", transform="rotate(-45, 40, 40)"></rect>
-				<rect x="0" y="36" width="80" height="8" rx="4", transform="rotate(45, 40, 40)"></rect>
-			</svg>
+		<div>
+			<div id="menu-toggle">
+				<svg class="" id="hamburger" viewBox="0 0 100 80" width="50" height="50">
+					<rect y="14" width="100" height="8" rx="4"></rect>
+					<rect y="36" width="100" height="8" rx="4"></rect>
+					<rect y="58" width="100" height="8" rx="4"></rect>
+				</svg>
+				<svg class="removed" id="cross" viewBox="0 0 80 80" width="50" height="50">
+					<rect x="0" y="36" width="80" height="8" rx="4", transform="rotate(-45, 40, 40)"></rect>
+					<rect x="0" y="36" width="80" height="8" rx="4", transform="rotate(45, 40, 40)"></rect>
+				</svg>
+			</div>
+			<div id="canvas-container">
+				<canvas id="canvas"></canvas>
+			</div>
+			<div id="sliders" class="hidden">
+				<table>
+					<tr>
+						<td style="font-weight: bold;">Number of Boids</td>
+					</tr>
+					<tr>
+						<td class="slider">
+							<input type="range" class="range-input" id="boid-number" 
+								min="0" max="500" value="200" step="10"
+								oninput="add_remove_boids(this.value)">
+						</td>
+					</tr>
+					{% for behaviour in ["separation", "cohesion", "alignment"] %}
+					<tr>
+						<td style="padding: 1em 0 0 0; font-weight: bold;">{{ behaviour.title() }}</td>
+					</tr>
+					<tr>
+						<td style="padding: 0 0em;">Weight</td>
+					</tr>
+					<tr>
+						<td class="slider">
+							<input type="range" class="range-input" id="{{ behaviour }}-weight" 
+								min="0" max="2" value="0." step="0.02"
+								oninput="slider_input('{{ behaviour }}', 'weight', this.value)">
+						</td>
+					</tr>
+					<tr>
+						<td style="padding: 0 0em;">Radius</td>
+					</tr>
+					<tr>
+						<td class="slider">
+							<input type="range" class="range-input" id="{{ behaviour }}-radius" 
+								min="0" max="0.2" value="0." step="0.002"
+								oninput="slider_input('{{ behaviour }}', 'radius', this.value)">
+						</td>
+					</tr>
+					{% endfor %}
+					<tr>
+						<td style="padding: 1em 0 0 0; font-weight: bold;">Mouse Attraction</td>
+					</tr>
+					<tr>
+						<td class="slider">
+							<input type="range" class="range-input" id="mouse-weight" 
+								min="0" max="1" value="0" step="0.05"
+								oninput="slider_input('mouse', 'weight', this.value)">
+						</td>
+					</tr>
+				</table>
+				<div class="clearfix">
+					<div class="project-button slider-button" id="reposition">Reposition</div>
+					<div class="project-button slider-button" id="reset">Reset</div>
+				</div>
+			</div>
 		</div>
-		<div class="button" id="info-button"></div>
 		<div id="info">
 			{{ info|safe }}
 		</div>
-		<div class="button" id="controls-button"></div>
-		<table id="sliders">
-			<tr>
-				<td>Number of Boids:</td>
-				<td class="slider-display" id="boid-number-value">200</td>
-				<td class="slider">
-					<input type="range" class="range-input" id="boid-number" 
-						   min="0" max="500" value="200" step="10"
-						   oninput="add_remove_boids(this.value)">
-					<div class="slider-ticks">
-						<option>0</option>
-						<option>250</option>
-						<option>500</option>
-					</div>
-				</td>
-			</tr>
-			{% for behaviour in ["separation", "cohesion", "alignment"] %}
-			<tr>
-				<td>{{ behaviour.title() }} Weight:</td>
-				<td class="slider-display" id="{{ behaviour }}-weight-value">1.</td>
-				<td class="slider">
-					<input type="range" class="range-input" id="{{ behaviour }}-weight" 
-						   min="-1" max="2" value="1" step="0.05" 
-						   oninput="slider_input('{{ behaviour }}', 'weight', this.value)">
-					<div class="slider-ticks">
-						<option>-1</option>
-						<option>0</option>
-						<option>1</option>
-						<option>2</option>
-					</div>
-				</td>
-			</tr>
-			<tr>
-				<td>{{ behaviour.title() }} Radius:</td>
-				<td class="slider-display" id="{{ behaviour }}-radius-value">0.5</td>
-				<td class="slider">
-					<input type="range" class="range-input" id="{{ behaviour }}-radius" 
-					       min="0" max="1" value="0.5" step="0.01"
-						   oninput="slider_input('{{ behaviour }}', 'radius', this.value)">
-					<div class="slider-ticks">
-						<option>0</option>
-						<option>0.5</option>
-						<option>1</option>
-					</div>
-				</td>
-			</tr>
-			{% endfor %}
-			<tr>
-				<td>Mouse Attraction:</td>
-				<td class="slider-display" id="mouse-weight-value">0.5</td>
-				<td class="slider">
-					<input type="range" class="range-input" id="mouse-weight" 
-						   min="-1" max="2" value="1" step="0.05"
-						   oninput="slider_input('mouse', 'weight', this.value)">
-					<div class="slider-ticks">
-						<option>-1</option>
-						<option>0</option>
-						<option>1</option>
-						<option>2</option>
-					</div>
-				</td>
-			</tr>
-		</table>
 		<a class="h-pointer" href="{{url_for('index')}}" id="initials">OC</a>
 		<script src="{{ url_for('.static', filename='javascript/vector2d.js') }}"></script>
 		<script src="{{ url_for('.static', filename='javascript/boids.js') }}"></script>
         <script>
-			function setupCanvas(canvas) {
-				// Get the device pixel ratio, falling back to 1.
-				var dpr = window.devicePixelRatio || 1;
-				resize_canvas()
-				console.log(dpr);
-				// Get the size of the canvas in CSS pixels.
-				var rect = canvas.getBoundingClientRect();
-				// Give the canvas pixel dimensions of their CSS
-				// size * the device pixel ratio.
-				canvas.width = rect.width * dpr;
-				canvas.height = rect.height * dpr;
-				var ctx = canvas.getContext('2d');
-				console.log(canvas.width);
-				// Scale all drawing operations by the dpr, so you
-				// don't have to worry about the difference.
-				ctx.scale(dpr, dpr);
-				return ctx;
-			}
-			var canvas = document.createElement('canvas')
+			var canvas = document.getElementById('canvas')
 			  , ctx = canvas.getContext('2d')
 			  , boids = new Boids(200);
-			
-			document.body.appendChild(canvas);
 			
 			var id = setInterval(frame, 15);
 			function frame() {
@@ -123,10 +97,12 @@
 
 			var dpr = window.devicePixelRatio || 1;
             function resize_canvas() {
-				canvas.style.width = window.innerWidth + "px";
-				canvas.style.height = window.innerHeight + "px";
-                canvas.width = window.innerWidth * dpr;
-                canvas.height = window.innerHeight * dpr;
+				// Visually fill parent
+				canvas.style.width = "100%";
+				canvas.style.height = "100%";
+				// set internal size to match.
+				canvas.width  = canvas.offsetWidth * dpr;
+				canvas.height = canvas.offsetHeight * dpr;
 			};
 			function onresize() {
 				resize_canvas();
@@ -144,22 +120,17 @@
 				let dims = new Vector2D(canvas.width, canvas.height);
 				for (let boid of boids.boids) {
 					let pos = boid.position.mult(dims)
-					ctx.fillRect(pos.x, pos.y, 2, 2)
+					ctx.beginPath();
+					ctx.arc(pos.x, pos.y, 1, 0, 2 * Math.PI);
+					ctx.fill();
 				}
-			}
-			
-			function slider_display(id, value, percent=true) {
-				if (percent) {
-					value = Math.round(100*value)+"%";
-				}
-				document.getElementById(`${id}-value`).innerHTML = value;
 			}
 
 			function slider_input(behaviour, parameter, value) {
+				console.log(behaviour, parameter, value)
 				for (let boid of boids.boids) {
 					boid.forces[behaviour][parameter] = value;
 				}
-				slider_display(`${behaviour}-${parameter}`, value)
 			}
 			
 			function add_remove_boids(value) {
@@ -173,16 +144,15 @@
 				while (value < boids.boids.length) {
 					boids.boids.pop();
 				}
-				slider_display("boid-number", value, false)
 			}
 			
 			// Slider Initial Values
 			function slider_init(id, value, percent=true)  {
 				let slider = document.getElementById(id);
 				slider.value = value;
-				slider_display(id, value, percent);
+				// slider_display(id, value, percent);
 			}
-			(() => {
+			function slider_set_from_boids() {
 				let reference_boid = boids.boids[0];
 				for (let behaviour of ["separation", "cohesion", "alignment"]) {
 					slider_init(`${behaviour}-weight`, reference_boid.forces[behaviour].weight);
@@ -190,22 +160,36 @@
 				}
 				slider_init('mouse-weight', reference_boid.forces["mouse"].weight);
 				slider_init('boid-number', boids.boids.length, false);
-			})();
+			}
+			slider_set_from_boids();
+
+			function reposition_boids() {
+				for (let boid of boids.boids) {
+					boid.position = Vector2D.random()
+					boid.velocity = Vector2D.zeros()
+				}
+			}
+
+			function reset_boids(){
+				reposition_boids()
+				reference_boid = new Boid()
+				for (let boid of boids.boids) {
+					boid.forces = Object.assign(boid.forces, reference_boid.forces);
+				}
+				slider_set_from_boids();
+			}
 		</script>
 		<script>
-			var info_button = document.getElementById("info-button");
-			var controls_button = document.getElementById("controls-button");
-
-			info_button.addEventListener("click", class_toggle("info", "hidden", false));
-			info_button.addEventListener("click", class_toggle("info-button", "hidden", false));
-			controls_button.addEventListener("click", class_toggle("sliders", "hidden", false));
-			controls_button.addEventListener("click", class_toggle("controls-button", "hidden", false));
-
-            var menu_shown = false;
             var menu_toggle = document.getElementById("menu-toggle");
             menu_toggle.addEventListener("click", class_toggle("hamburger", "removed", false));
             menu_toggle.addEventListener("click", class_toggle("cross", "removed", true));
-            menu_toggle.addEventListener("click", () => { menu_shown = !menu_shown });
+			menu_toggle.addEventListener("click", class_toggle("sliders", "hidden", true));
+			menu_toggle.addEventListener("click", class_toggle("canvas-container", "background", false));
+
+			var reposition_button = document.getElementById("reposition");
+			reposition_button.addEventListener("click", reposition_boids);
+			var reset_button = document.getElementById("reset");
+			reset_button.addEventListener("click", reset_boids);
 		</script>
     </body>
 </html>

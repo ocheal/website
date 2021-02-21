@@ -52,11 +52,10 @@ class Boid {
         this.velocity = velocity;
         this.acceleration = Vector2D.zeros();
         this.external = Vector2D.zeros();
-
         this.forces = {"separation": new Separation(0.05),
                        "alignment": new Alignment(0.1),
                        "cohesion": new Cohesion(0.1),
-                       "mouse": new MouseAttractor(0.)} //weight not radius
+                       "mouse": new MouseAttractor(1.0, 0.0)}
     }
 
     apply_boundary() {
@@ -204,13 +203,8 @@ class Breakaway extends Force {
     }
 }
 
-class MouseAttractor extends Force {
-    get factor() {
-        return 0.0005;
-    }
-    
-    constructor(weight=1.) {
-        super(undefined, weight);
+class MousePosition {
+    constructor() {
         this.position = Vector2D.zeros();
         this.in_element = false;
         canvas.addEventListener("mouseenter", () => {this.in_element=true;});
@@ -218,9 +212,17 @@ class MouseAttractor extends Force {
         canvas.addEventListener("mousemove", (e) => {this.position.x = e.clientX/canvas.offsetWidth;
                                                      this.position.y = e.clientY/canvas.offsetHeight;});
     }
+}
+mouse_position = new MousePosition()
+
+class MouseAttractor extends Force {
+    get factor() {
+        return 0.0005;
+    }
+
     force (boid, others, distances) {
-        if (this.in_element) {
-            return this.position.subtract(boid.position);
+        if (mouse_position.in_element) {
+            return mouse_position.position.subtract(boid.position);
         }
         return Vector2D.zeros();
     }
